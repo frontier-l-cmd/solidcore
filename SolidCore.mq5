@@ -20,92 +20,92 @@ CPositionInfo posInfo;
 //| 入力パラメーター                                                  |
 //+------------------------------------------------------------------+
 input group "===== 取引銘柄1 ====="
-input bool   Symbol1Enabled = true;       // 銘柄1 ON/OFF
-input string Symbol1Name    = "EURUSD";  // 基本銘柄名(サフィックス自動検出)
-input double Symbol1Lot     = 0.01;       // 銘柄1 初期ロット
+input bool   銘柄1稼働     = true;       // 銘柄1 ON/OFF
+input string 銘柄1名称     = "EURUSD";  // 基本銘柄名(サフィックス自動検出)
+input double 銘柄1初期ロット = 0.10;
 
 input group "===== 取引銘柄2 ====="
-input bool   Symbol2Enabled = false;
-input string Symbol2Name    = "GBPUSD";
-input double Symbol2Lot     = 0.01;
+input bool   銘柄2稼働     = true;
+input string 銘柄2名称     = "EURJPY";
+input double 銘柄2初期ロット = 0.10;
 
 input group "===== 取引銘柄3 ====="
-input bool   Symbol3Enabled = false;
-input string Symbol3Name    = "USDJPY";
-input double Symbol3Lot     = 0.01;
+input bool   銘柄3稼働     = true;
+input string 銘柄3名称     = "GBPUSD";
+input double 銘柄3初期ロット = 0.10;
 
 input group "===== 取引銘柄4 ====="
-input bool   Symbol4Enabled = false;
-input string Symbol4Name    = "AUDUSD";
-input double Symbol4Lot     = 0.01;
+input bool   銘柄4稼働     = true;
+input string 銘柄4名称     = "USDCAD";
+input double 銘柄4初期ロット = 0.10;
 
 input group "===== 取引銘柄5 ====="
-input bool   Symbol5Enabled = false;
-input string Symbol5Name    = "NZDUSD";
-input double Symbol5Lot     = 0.01;
+input bool   銘柄5稼働     = true;
+input string 銘柄5名称     = "AUDUSD";
+input double 銘柄5初期ロット = 0.10;
 
 enum ENUM_TRADE_DIRECTION
 {
-   DIR_BOTH       = 0,
-   DIR_ONLY_LONG  = 1,
-   DIR_ONLY_SHORT = 2
+   両方向       = 0,
+   ロングのみ   = 1,
+   ショートのみ = 2
 };
 
 input group "===== 基本設定 ====="
-input ENUM_TRADE_DIRECTION TradeDirection = DIR_BOTH;
-input long   MagicNumberLong  = 20260101;     // 既存LONG引継ぎ用(変更しない)
-input long   MagicNumberShort = 20260102;     // 既存SHORT引継ぎ用(変更しない)
-input string EAComment        = "SOLID-CORE";
-input int    SlippagePoints   = 30;
+input ENUM_TRADE_DIRECTION 売買方向 = 両方向;
+input long   ロングマジック番号  = 20260101;  // 既存LONG引継ぎ用(変更しない)
+input long   ショートマジック番号 = 20260102;  // 既存SHORT引継ぎ用(変更しない)
+input string EAコメント          = "SOLID-CORE";
+input int    許容スリッページ     = 30;
 
 input group "===== RSI設定 ====="
-input ENUM_TIMEFRAMES RSI_Timeframe = PERIOD_M5;
-input int    RSI_Period          = 14;
-input double RSI_BuyEntryUpper   = 35.0;
-input double RSI_BuyEntryLower   = 20.0;
-input double RSI_SellEntryUpper  = 80.0;
-input double RSI_SellEntryLower  = 65.0;
+input ENUM_TIMEFRAMES RSI時間足 = PERIOD_M5;
+input int    RSI期間          = 14;
+input double 買いRSI上限      = 35.0;
+input double 買いRSI下限      = 20.0;
+input double 売りRSI上限      = 80.0;
+input double 売りRSI下限      = 65.0;
 
 input group "===== ナンピン設定 ====="
 // ナンピン間隔はFIXED_NANPIN_PIPSで8pips固定
-input int    MaxStages        = 30;   // 1方向・1銘柄あたりの最大保有数
-input int    EntryWaitMinutes = 60;
-input bool   UseSkipBonus     = true;
-input int    MaxSkipBonus     = 2;
+input int    最大保有ポジション数 = 30; // 1方向・1銘柄あたり
+input int    追加待機時間_分       = 60;
+input bool   見送り加算機能        = true;
+input int    最大見送り加算回数    = 2;
 
 input group "===== ロット設定 ====="
-input double LotMultiplier = 1.5;
-input double LotStep       = 0.01;
+input double ロット倍率 = 1.5;
+input double ロット刻み = 0.01;
 
 input group "===== TP設定(加重平均からのpips) ====="
-input double TP_Stage1to2  = 15.0;
-input double TP_Stage3Plus = 18.0;
+input double TP_1段目から2段目 = 15.0;
+input double TP_3段目以降       = 18.0;
 
 input group "===== トレール設定 ====="
-input bool   UseTrailingStop = true;
-input int    TrailStage_Boundary1 = 3;
-input int    TrailStage_Boundary2 = 6;
-input int    TrailStage_Boundary3 = 10;
-input double Trail_Shallow_Trigger = 6.0;
-input double Trail_Shallow_Width   = 4.0;
-input double Trail_Shallow_MinLock = 3.0;
-input double Trail_Middle_Trigger  = 5.0;
-input double Trail_Middle_Width    = 3.0;
-input double Trail_Middle_MinLock  = 2.0;
-input double Trail_Deep_Trigger    = 4.0;
-input double Trail_Deep_Width      = 2.0;
-input double Trail_Deep_MinLock    = 2.0;
-input double Trail_Extreme_Trigger = 3.0;
-input double Trail_Extreme_Width   = 1.0;
-input double Trail_Extreme_MinLock = 2.0;
+input bool   トレーリング機能       = true;
+input int    浅段境界               = 3;
+input int    中段境界               = 6;
+input int    深段境界               = 10;
+input double 浅段トレール発動pips    = 6.0;
+input double 浅段トレール幅pips      = 4.0;
+input double 浅段最低確保pips        = 3.0;
+input double 中段トレール発動pips    = 5.0;
+input double 中段トレール幅pips      = 3.0;
+input double 中段最低確保pips        = 2.0;
+input double 深段トレール発動pips    = 4.0;
+input double 深段トレール幅pips      = 2.0;
+input double 深段最低確保pips        = 2.0;
+input double 最深段トレール発動pips  = 3.0;
+input double 最深段トレール幅pips    = 1.0;
+input double 最深段最低確保pips      = 2.0;
 
 input group "===== 合計損益チェック(決済時) ====="
-input bool   UseProfitCheck    = true;
-input double MinTotalProfitJPY = 0;
+input bool   決済時利益チェック = true;
+input double 最低合計利益_円    = 0;
 
 input group "===== 含み損損切り ====="
-input bool   UseMaxLoss  = false;
-input double MaxLoss_JPY = 100000;
+input bool   含み損損切り機能 = false;
+input double 最大含み損_円    = 100000;
 
 input group "===== 曜日フィルター ====="
 input bool 月曜日稼働 = true;
@@ -117,12 +117,77 @@ input bool 土曜日稼働 = false;
 input bool 日曜日稼働 = false;
 
 input group "===== 時間フィルター(日本時間) ====="
-input bool UseTimeFilter      = true;
-input int  TradeStartHour     = 9;
-input int  TradeStartMin      = 0;
-input int  TradeEndHour       = 16;
-input int  TradeEndMin        = 0;
-input bool NanpinOutsideHours = false;
+input bool 時間フィルター使用 = true;
+input int  取引開始時刻_時    = 9;
+input int  取引開始時刻_分    = 0;
+input int  取引終了時刻_時    = 16;
+input int  取引終了時刻_分    = 0;
+input bool 時間外ナンピン許可 = true;
+
+// 内部ロジック互換用エイリアス。MT5のパラメーター画面には日本語名を表示する。
+#define Symbol1Enabled 銘柄1稼働
+#define Symbol1Name 銘柄1名称
+#define Symbol1Lot 銘柄1初期ロット
+#define Symbol2Enabled 銘柄2稼働
+#define Symbol2Name 銘柄2名称
+#define Symbol2Lot 銘柄2初期ロット
+#define Symbol3Enabled 銘柄3稼働
+#define Symbol3Name 銘柄3名称
+#define Symbol3Lot 銘柄3初期ロット
+#define Symbol4Enabled 銘柄4稼働
+#define Symbol4Name 銘柄4名称
+#define Symbol4Lot 銘柄4初期ロット
+#define Symbol5Enabled 銘柄5稼働
+#define Symbol5Name 銘柄5名称
+#define Symbol5Lot 銘柄5初期ロット
+#define DIR_BOTH 両方向
+#define DIR_ONLY_LONG ロングのみ
+#define DIR_ONLY_SHORT ショートのみ
+#define TradeDirection 売買方向
+#define MagicNumberLong ロングマジック番号
+#define MagicNumberShort ショートマジック番号
+#define EAComment EAコメント
+#define SlippagePoints 許容スリッページ
+#define RSI_Timeframe RSI時間足
+#define RSI_Period RSI期間
+#define RSI_BuyEntryUpper 買いRSI上限
+#define RSI_BuyEntryLower 買いRSI下限
+#define RSI_SellEntryUpper 売りRSI上限
+#define RSI_SellEntryLower 売りRSI下限
+#define MaxStages 最大保有ポジション数
+#define EntryWaitMinutes 追加待機時間_分
+#define UseSkipBonus 見送り加算機能
+#define MaxSkipBonus 最大見送り加算回数
+#define LotMultiplier ロット倍率
+#define LotStep ロット刻み
+#define TP_Stage1to2 TP_1段目から2段目
+#define TP_Stage3Plus TP_3段目以降
+#define UseTrailingStop トレーリング機能
+#define TrailStage_Boundary1 浅段境界
+#define TrailStage_Boundary2 中段境界
+#define TrailStage_Boundary3 深段境界
+#define Trail_Shallow_Trigger 浅段トレール発動pips
+#define Trail_Shallow_Width 浅段トレール幅pips
+#define Trail_Shallow_MinLock 浅段最低確保pips
+#define Trail_Middle_Trigger 中段トレール発動pips
+#define Trail_Middle_Width 中段トレール幅pips
+#define Trail_Middle_MinLock 中段最低確保pips
+#define Trail_Deep_Trigger 深段トレール発動pips
+#define Trail_Deep_Width 深段トレール幅pips
+#define Trail_Deep_MinLock 深段最低確保pips
+#define Trail_Extreme_Trigger 最深段トレール発動pips
+#define Trail_Extreme_Width 最深段トレール幅pips
+#define Trail_Extreme_MinLock 最深段最低確保pips
+#define UseProfitCheck 決済時利益チェック
+#define MinTotalProfitJPY 最低合計利益_円
+#define UseMaxLoss 含み損損切り機能
+#define MaxLoss_JPY 最大含み損_円
+#define UseTimeFilter 時間フィルター使用
+#define TradeStartHour 取引開始時刻_時
+#define TradeStartMin 取引開始時刻_分
+#define TradeEndHour 取引終了時刻_時
+#define TradeEndMin 取引終了時刻_分
+#define NanpinOutsideHours 時間外ナンピン許可
 
 #define AUTH_URL "https://script.google.com/macros/s/AKfycbx7acPhcHcCGbk5VABcbjgW39VAoPD5sohfsUD_zWXt3dVCQKv0bS43rYImjhT_S53DmA/exec"
 
@@ -142,6 +207,8 @@ bool     g_TrailActiveLong[MAX_SYMBOLS];
 bool     g_TrailActiveShort[MAX_SYMBOLS];
 double   g_TrailHighLong[MAX_SYMBOLS];
 double   g_TrailLowShort[MAX_SYMBOLS];
+double   g_BasketStartLotLong[MAX_SYMBOLS];
+double   g_BasketStartLotShort[MAX_SYMBOLS];
 bool     g_AuthOK = false;
 bool     g_Processing = false;
 uint     g_LastProcessMs = 0;
@@ -432,10 +499,44 @@ double NormalizeLot(int index, double lot)
    return NormalizeDouble(lot,volumeDigits);
 }
 
-double GetLotForStage(int index, int stage)
+double RecoverBasketStartLot(int index, ENUM_POSITION_TYPE type)
+{
+   int stages=CountPositions(index,type);
+   if(stages<=0) return 0;
+   datetime latest=0;
+   double latestLot=0;
+   string latestComment="";
+   long magic=MagicForType(type);
+   for(int i=PositionsTotal()-1; i>=0; i--)
+      if(posInfo.SelectByIndex(i) && posInfo.Symbol()==g_Symbol[index] &&
+         posInfo.Magic()==magic && posInfo.PositionType()==type && posInfo.Time()>=latest)
+      {
+         latest=posInfo.Time();
+         latestLot=posInfo.Volume();
+         latestComment=posInfo.Comment();
+      }
+   if(latestLot<=0) return 0;
+
+   // 見送り加算された最新ポジションなら加算倍率を取り除く。
+   int skipPos=StringFind(latestComment,"_skip");
+   if(skipPos>=0)
+   {
+      int skip=(int)StringToInteger(StringSubstr(latestComment,skipPos+5));
+      if(skip>0) latestLot/=(1+skip);
+   }
+   double base=latestLot;
+   if(LotMultiplier>0)
+      for(int stage=1; stage<stages; stage++) base/=LotMultiplier;
+   return NormalizeLot(index,base);
+}
+
+double GetLotForStage(int index, ENUM_POSITION_TYPE type, int stage)
 {
    if(stage<=0 || g_StartLot[index]<=0) return 0;
-   double lot=g_StartLot[index];
+   double basketBase=(type==POSITION_TYPE_BUY)
+                     ? g_BasketStartLotLong[index]
+                     : g_BasketStartLotShort[index];
+   double lot=(basketBase>0) ? basketBase : g_StartLot[index];
    for(int i=1; i<stage; i++) lot*=LotMultiplier;
    return NormalizeLot(index,lot);
 }
@@ -479,7 +580,7 @@ int GetEntrySignal(int index)
 
 bool OpenPosition(int index, ENUM_POSITION_TYPE type, int stage, int skipBonus=0)
 {
-   double lot=GetLotForStage(index,stage);
+   double lot=GetLotForStage(index,type,stage);
    if(skipBonus>0) lot=NormalizeLot(index,lot*(1+skipBonus));
    if(lot<=0) return false;
 
@@ -497,12 +598,14 @@ bool OpenPosition(int index, ENUM_POSITION_TYPE type, int stage, int skipBonus=0
       datetime now=TimeCurrent();
       if(type==POSITION_TYPE_BUY)
       {
+         if(stage==1) g_BasketStartLotLong[index]=g_StartLot[index];
          g_LastLongEntry[index]=now;
          g_TrailActiveLong[index]=false;
          g_TrailHighLong[index]=0;
       }
       else
       {
+         if(stage==1) g_BasketStartLotShort[index]=g_StartLot[index];
          g_LastShortEntry[index]=now;
          g_TrailActiveShort[index]=false;
          g_TrailLowShort[index]=0;
@@ -576,12 +679,14 @@ void CloseAllPositions(int index, ENUM_POSITION_TYPE type)
 
    if(type==POSITION_TYPE_BUY)
    {
+      g_BasketStartLotLong[index]=0;
       g_TrailActiveLong[index]=false;
       g_TrailHighLong[index]=0;
       g_LastLongEntry[index]=0;
    }
    else
    {
+      g_BasketStartLotShort[index]=0;
       g_TrailActiveShort[index]=false;
       g_TrailLowShort[index]=0;
       g_LastShortEntry[index]=0;
@@ -786,11 +891,15 @@ int OnInit()
       // 現在保有中のポジションから待機時間を復元する。
       g_LastLongEntry[i]=GetLastPositionTime(i,POSITION_TYPE_BUY);
       g_LastShortEntry[i]=GetLastPositionTime(i,POSITION_TYPE_SELL);
+      g_BasketStartLotLong[i]=RecoverBasketStartLot(i,POSITION_TYPE_BUY);
+      g_BasketStartLotShort[i]=RecoverBasketStartLot(i,POSITION_TYPE_SELL);
       active++;
       Print("銘柄",i+1,": 入力=",g_InputSymbol[i]," / 検出=",g_Symbol[i],
             " / 初期Lot=",g_StartLot[i]," / PipsToPrice=",g_PipsToPrice[i],
             " / 引継BUY=",CountPositions(i,POSITION_TYPE_BUY),
-            " / 引継SELL=",CountPositions(i,POSITION_TYPE_SELL));
+            " (復元開始Lot=",g_BasketStartLotLong[i],")",
+            " / 引継SELL=",CountPositions(i,POSITION_TYPE_SELL),
+            " (復元開始Lot=",g_BasketStartLotShort[i],")");
    }
    if(active==0)
    {
